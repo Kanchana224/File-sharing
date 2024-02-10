@@ -25,7 +25,7 @@ export const downloadImage = async (request, response) => {
         }
         file.downloadContent++;
         await file.save();
-        const fileUrl = `${file.path}`;
+        const fileUrl = `uploads/${file._id}`;
         response.redirect(fileUrl);
     } catch (error) {
         console.error(error.message);
