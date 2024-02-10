@@ -1,6 +1,7 @@
-// controller/image-controller.js
 
-import File from "../model/file.js"; // Ensure File is imported only once
+
+import File from "../model/file.js";
+import mongoose from "mongoose";
 
 export const uploadImage = async (request, response) => {
     const fileObj = {
@@ -19,12 +20,16 @@ export const uploadImage = async (request, response) => {
 
 export const downloadImage = async (request, response) => {
     try {
-        const file = await File.findById(request.params.fileId); // Use findById instead of findOne
+        const fileId = mongoose.Types.ObjectId(request.params.fileId);
+        const file = await File.findById(fileId);
+
         if (!file) {
             return response.status(404).json({ error: "File not found" });
         }
+
         file.downloadContent++;
         await file.save();
+        
         const fileUrl = `${file.path}`;
         response.redirect(fileUrl);
     } catch (error) {
