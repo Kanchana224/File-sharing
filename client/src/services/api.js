@@ -1,6 +1,8 @@
+// services/api.js
+
 import axios from "axios";
 
-const API_URL = "http://localhost:8000";
+const API_URL = "https://file-sharing-mxpa.onrender.com"; // Updated deployment link
 
 export const uploadFile = async (data) => {
   try {
