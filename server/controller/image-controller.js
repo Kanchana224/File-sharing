@@ -19,7 +19,7 @@ export const uploadImage = async (request, response) => {
 
 export const downloadImage = async (request, response) => {
     try {
-        const file = await File.findOne({ path: request.params.fileId });
+        const file = await File.findById(request.params.fileId); // Use findById instead of findOne
         if (!file) {
             return response.status(404).json({ error: "File not found" });
         }
@@ -29,7 +29,7 @@ export const downloadImage = async (request, response) => {
         response.redirect(fileUrl);
     } catch (error) {
         console.error(error.message);
-        response.status(500).json({ error: error.message });
+        response.status(500).json({ error: "Internal Server Error" });
     }
 };
 
