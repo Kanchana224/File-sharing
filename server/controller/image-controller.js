@@ -1,4 +1,5 @@
-import express from "express";
+// controller/image-controller.js
+
 import File from "../model/file.js";
 
 export const uploadImage = async (request, response) => {
@@ -8,14 +9,13 @@ export const uploadImage = async (request, response) => {
     };
     try {
         const file = await File.create(fileObj);
-        const filePath = `https://file-sharing-mxpa.onrender.com/file/${file._id}`;
+        const filePath = `https://file-sharing-mxpa.onrender.com/uploads/${file._id}`;
         response.status(200).json({ path: filePath });
     } catch (error) {
         console.error(error.message);
         response.status(500).json({ error: error.message });
     }
 };
-
 
 export const downloadImage = async (request, response) => {
     try {
@@ -25,18 +25,13 @@ export const downloadImage = async (request, response) => {
         }
         file.downloadContent++;
         await file.save();
-        const baseUrl = "https://file-sharing-mxpa.onrender.com"; 
-        const fileUrl = `${baseUrl}/uploads/${file.path}`;
+        const fileUrl = `${file.path}`;
         response.redirect(fileUrl);
     } catch (error) {
         console.error(error.message);
         response.status(500).json({ error: error.message });
     }
 };
-
-
-
-
 
 export const getAllFiles = async (req, res) => {
     try {
