@@ -26,7 +26,7 @@ export const downloadImage = async (request, response) => {
         file.downloadContent++;
         await file.save();
         const baseUrl = "https://file-sharing-mxpa.onrender.com"; 
-        const fileUrl = `${baseUrl}/${file.path}`;
+        const fileUrl = `${baseUrl}/uploads/${file.path}`;
         response.redirect(fileUrl);
     } catch (error) {
         console.error(error.message);
