@@ -17,21 +17,26 @@ export const uploadImage = async (request, response) => {
     }
 };
 
+// controller/image-controller.js
+
+import File from "../model/file.js";
+
 export const downloadImage = async (request, response) => {
     try {
-        const file = await File.findById(request.params.fileId);
+        const file = await File.findOne({ path: request.params.fileId }); // Query based on the path field
         if (!file) {
             return response.status(404).json({ error: "File not found" });
         }
         file.downloadContent++;
         await file.save();
-        const fileUrl = `uploads/${file._id}`;
+        const fileUrl = `${file.path}`;
         response.redirect(fileUrl);
     } catch (error) {
         console.error(error.message);
         response.status(500).json({ error: error.message });
     }
 };
+
 
 export const getAllFiles = async (req, res) => {
     try {
