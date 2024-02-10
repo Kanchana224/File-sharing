@@ -13,6 +13,7 @@ app.use(cors());
 app.use(express.json());
 
 // Serve uploaded files statically
+const __dirname = path.dirname(new URL(import.meta.url).pathname); // Get the directory name using import.meta.url
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // Use the router for routing requests

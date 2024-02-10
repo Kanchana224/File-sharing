@@ -1,6 +1,6 @@
 // controller/image-controller.js
 
-import File from "../model/file.js";
+import File from "../model/file.js"; // Ensure File is imported only once
 
 export const uploadImage = async (request, response) => {
     const fileObj = {
@@ -17,13 +17,9 @@ export const uploadImage = async (request, response) => {
     }
 };
 
-// controller/image-controller.js
-
-import File from "../model/file.js";
-
 export const downloadImage = async (request, response) => {
     try {
-        const file = await File.findOne({ path: request.params.fileId }); // Query based on the path field
+        const file = await File.findOne({ path: request.params.fileId });
         if (!file) {
             return response.status(404).json({ error: "File not found" });
         }
@@ -37,7 +33,6 @@ export const downloadImage = async (request, response) => {
     }
 };
 
-
 export const getAllFiles = async (req, res) => {
     try {
         const files = await File.find();
@@ -47,3 +42,4 @@ export const getAllFiles = async (req, res) => {
         res.status(500).json({ error: "Failed to fetch files" });
     }
 };
+
