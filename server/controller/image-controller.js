@@ -1,7 +1,7 @@
-
-
 import File from "../model/file.js";
 import mongoose from "mongoose";
+import path from "path";
+import fs from "fs";
 
 export const uploadImage = async (request, response) => {
     const fileObj = {
@@ -20,18 +20,24 @@ export const uploadImage = async (request, response) => {
 
 export const downloadImage = async (request, response) => {
     try {
-        const fileId = mongoose.Types.ObjectId(request.params.fileId);
-        const file = await File.findById(fileId);
+        const fileId = request.params.fileId;
+        if (!mongoose.Types.ObjectId.isValid(fileId)) {
+            return response.status(404).json({ error: "Invalid File ID" });
+        }
 
+        const file = await File.findById(fileId);
         if (!file) {
             return response.status(404).json({ error: "File not found" });
         }
 
-        file.downloadContent++;
-        await file.save();
-        
-        const fileUrl = `${file.path}`;
-        response.redirect(fileUrl);
+        // Set the appropriate headers for file download
+        response.setHeader("Content-Disposition", `attachment; filename="${file.name}"`);
+        response.setHeader("Content-Type", "application/octet-stream");
+
+        // Stream the file for download
+        const filePath = path.join(__dirname, "..", file.path);
+        const fileStream = fs.createReadStream(filePath);
+        fileStream.pipe(response);
     } catch (error) {
         console.error(error.message);
         response.status(500).json({ error: "Internal Server Error" });
@@ -47,4 +53,3 @@ export const getAllFiles = async (req, res) => {
         res.status(500).json({ error: "Failed to fetch files" });
     }
 };
-
